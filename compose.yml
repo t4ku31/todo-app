@@ -1,0 +1,40 @@
+# docker-compose.yml
+services:
+  app:
+    build:
+      context: ./app1
+      dockerfile: Dockerfile
+    command: mvn spring-boot:run -Dspring-boot.run.fork=false  -Dspring-boot.run.addResources=true
+    volumes:
+      - ./app1/src:/app/src
+      - ./app1/pom.xml:/app/pom.xml
+      - ./app1/src/main/resources:/app/src/main/resources
+    container_name: my-springboot-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/app1db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: secret
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: app1db
+    ports:
+      - "3306:3306"
+
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./front:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
