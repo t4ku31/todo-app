@@ -1,0 +1,233 @@
+#!/bin/bash
+
+# Git Emoji Commit Script
+# Usage: ./git-emoji.sh <emoji> <message>
+
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <emoji> <message>"
+    echo "Example: $0 ✨ 'Add new feature'"
+    exit 1
+fi
+
+EMOJI=$1
+shift
+MESSAGE="$*"
+
+# Common emoji mappings
+case $EMOJI in
+    "feat"|"✨")
+        EMOJI="✨"
+        ;;
+    "fix"|"🐛")
+        EMOJI="🐛"
+        ;;
+    "docs"|"📝")
+        EMOJI="📝"
+        ;;
+    "style"|"💄")
+        EMOJI="💄"
+        ;;
+    "refactor"|"♻️")
+        EMOJI="♻️"
+        ;;
+    "perf"|"⚡️")
+        EMOJI="⚡️"
+        ;;
+    "test"|"🧪")
+        EMOJI="🧪"
+        ;;
+    "chore"|"🔧")
+        EMOJI="🔧"
+        ;;
+    "init"|"🎉")
+        EMOJI="🎉"
+        ;;
+    "deploy"|"🚀")
+        EMOJI="🚀"
+        ;;
+    "security"|"🦈")
+        EMOJI="🦈"
+        ;;
+    "breaking"|"💥")
+        EMOJI="💥"
+        ;;
+    "deps"|"➕")
+        EMOJI="➕"
+        ;;
+    "remove"|"➖")
+        EMOJI="➖"
+        ;;
+    "config"|"🔧")
+        EMOJI="🔧"
+        ;;
+    "i18n"|"🌐")
+        EMOJI="🌐"
+        ;;
+    "typo"|"✏️")
+        EMOJI="✏️"
+        ;;
+    "revert"|"⏪️")
+        EMOJI="⏪️"
+        ;;
+    "merge"|"🔀")
+        EMOJI="🔀"
+        ;;
+    "assets"|"🍱")
+        EMOJI="🍱"
+        ;;
+    "accessibility"|"♿️")
+        EMOJI="♿️"
+        ;;
+    "comment"|"💡")
+        EMOJI="💡"
+        ;;
+    "log"|"🔊")
+        EMOJI="🔊"
+        ;;
+    "contributor"|"👥")
+        EMOJI="👥"
+        ;;
+    "ux"|"🚸")
+        EMOJI="🚸"
+        ;;
+    "arch"|"🏗️")
+        EMOJI="🏗️"
+        ;;
+    "responsive"|"📱")
+        EMOJI="📱"
+        ;;
+    "mock"|"🤡")
+        EMOJI="🤡"
+        ;;
+    "easter"|"🥚")
+        EMOJI="🥚"
+        ;;
+    "gitignore"|"🙈")
+        EMOJI="🙈"
+        ;;
+    "snapshot"|"📸")
+        EMOJI="📸"
+        ;;
+    "experiment"|"⚗️")
+        EMOJI="⚗️"
+        ;;
+    "seo"|"🔍️")
+        EMOJI="🔍️"
+        ;;
+    "types"|"🏷️")
+        EMOJI="🏷️"
+        ;;
+    "seed"|"🌱")
+        EMOJI="🌱"
+        ;;
+    "analytics"|"📈")
+        EMOJI="📈"
+        ;;
+    "algo"|"🧮️")
+        EMOJI="🧮️"
+        ;;
+    "error"|"🧸")
+        EMOJI="🧸"
+        ;;
+    "linux"|"🐧")
+        EMOJI="🐧"
+        ;;
+    "macos"|"🍎")
+        EMOJI="🍎"
+        ;;
+    "racing"|"🏎️")
+        EMOJI="🏎️"
+        ;;
+    "game"|"🎮")
+        EMOJI="🎮"
+        ;;
+    "gambling"|"🎲")
+        EMOJI="🎲"
+        ;;
+    "plugin"|"🧩")
+        EMOJI="🧩"
+        ;;
+    "target"|"🎯")
+        EMOJI="🎯"
+        ;;
+    "circus"|"🎪")
+        EMOJI="🎪"
+        ;;
+    "theater"|"🎭")
+        EMOJI="🎭"
+        ;;
+    "art"|"🎨")
+        EMOJI="🎨"
+        ;;
+    "movie"|"🎬")
+        EMOJI="🎬"
+        ;;
+    "music"|"🎤")
+        EMOJI="🎤"
+        ;;
+    "audio"|"🎧")
+        EMOJI="🎧"
+        ;;
+    "score"|"🎼")
+        EMOJI="🎼"
+        ;;
+    "piano"|"🎹")
+        EMOJI="🎹"
+        ;;
+    "drum"|"🥁")
+        EMOJI="🥁"
+        ;;
+    "guitar"|"🎸")
+        EMOJI="🎸"
+        ;;
+    "brass"|"🎺")
+        EMOJI="🎺"
+        ;;
+    "strings"|"🎻")
+        EMOJI="🎻"
+        ;;
+    "woodwind"|"🎷")
+        EMOJI="🎷"
+        ;;
+    "note"|"🎵")
+        EMOJI="🎵"
+        ;;
+    "notes"|"🎶")
+        EMOJI="🎶"
+        ;;
+    "singing"|"🎤")
+        EMOJI="🎤"
+        ;;
+    "listening"|"🎧")
+        EMOJI="🎧"
+        ;;
+    "composition"|"🎼")
+        EMOJI="🎼"
+        ;;
+    "keyboard"|"🎹")
+        EMOJI="🎹"
+        ;;
+    "percussion"|"🥁")
+        EMOJI="🥁"
+        ;;
+    "string"|"🎸")
+        EMOJI="🎸"
+        ;;
+    "brass"|"🎺")
+        EMOJI="🎺"
+        ;;
+    "string"|"🎻")
+        EMOJI="🎻"
+        ;;
+    "woodwind"|"🎷")
+        EMOJI="🎷"
+        ;;
+    *)
+        # If emoji is not recognized, use it as is
+        ;;
+esac
+
+# Commit with emoji
+git commit -m "$EMOJI $MESSAGE"
+
+echo "✅ Committed: $EMOJI $MESSAGE"
