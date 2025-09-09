@@ -1,36 +1,60 @@
 # docker-compose.yml
 services:
-  app:
-    build:
-      context: ./app1
-      dockerfile: Dockerfile
-    command: mvn spring-boot:run -Dspring-boot.run.fork=false  -Dspring-boot.run.addResources=true
+  db:
+    container_name: mysql-db
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: todoapp
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
     volumes:
-      - ./app1/src:/app/src
-      - ./app1/pom.xml:/app/pom.xml
-      - ./app1/src/main/resources:/app/src/main/resources
-    container_name: my-springboot-app
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+
+  flyway:
+    container_name: flyway
+    build:
+      context: ./docker/flyway
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/src/main/resources/db/sql:/flyway/sql
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      FLYWAY_URL: jdbc:mysql://db:3306/todoapp
+      FLYWAY_USER: root
+      FLYWAY_PASSWORD: secret
+    command: -connectRetries=60 migrate
+  backend:
+    container_name: spring-app
+    build:
+      context: ./docker/spring
+      dockerfile: Dockerfile
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
+    volumes:
+      - ./backend:/app
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/app1db
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/todoapp
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: secret
-    depends_on:
-      - db
-
-  db:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: app1db
-    ports:
-      - "3306:3306"
+    working_dir: /app
 
   frontend:
-    build:
-      context: ./front
-      dockerfile: Dockerfile
+    container_name: react-app
+    image: node:20
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev -- --host"
     ports:
       - "5173:5173"
     volumes:
@@ -38,3 +62,8 @@ services:
       - /app/node_modules
     stdin_open: true
     tty: true
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+    driver: local
