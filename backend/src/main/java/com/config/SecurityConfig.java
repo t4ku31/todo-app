@@ -17,7 +17,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/signin").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/signup").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/signout").permitAll().authenticated()
                         .anyRequest().authenticated())
                 .formLogin(withDefaults()) // deprecated警告出るけど一旦は可
                 .httpBasic(withDefaults()); // これも同様
