@@ -6,7 +6,7 @@ type LogoProps = {
     alt?: string
 }
 
-export function Logo({ className, alt = "Todo App" }: LogoProps) {
+export default function Logo({ className, alt = "Todo App" }: LogoProps) {
     return (
         <img
             src={logoSrc}
