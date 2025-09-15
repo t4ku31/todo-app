@@ -78,4 +78,19 @@ public class AuthController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+
+    @PostMapping("/signout")
+    public ResponseEntity<Void> signout(HttpServletResponse response) {
+        // クッキーを無効化
+        ResponseCookie cookie = ResponseCookie.from(properties.getCookie().getName(), "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0) // 即座に期限切れ
+                .sameSite("None")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok().build();
+    }
 }
